@@ -1,0 +1,11 @@
+node_modules
+
+core
+
+_test_app
+
+.vscode
+
+.gitignore
+
+hakool.code-workspace

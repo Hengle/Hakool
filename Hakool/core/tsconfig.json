@@ -1,0 +1,40 @@
+{
+	"compilerOptions": 
+	{
+    "outDir": "../lib/",
+
+    "rootDir": "./src/",
+
+    "outFile": "../lib/hakool.js",
+
+    "target": "ES2015",
+    
+    "module": "AMD",
+
+    "strict": false,
+    
+    "declaration": true,
+    
+    "declarationMap": false,
+    
+    "noImplicitReturns": true,
+    
+    "noFallthroughCasesInSwitch": true,
+    
+		"removeComments": false,
+    
+    "sourceMap": true,
+    
+    "lib" : [
+      "es5", 
+      "DOM", 
+      "ES2015.Collection", 
+      "scripthost"
+    ]
+  },
+
+  "include" : 
+  [
+    "./src/**/*"
+  ]
+}

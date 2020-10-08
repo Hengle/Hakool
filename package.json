@@ -1,0 +1,24 @@
+{
+  "name": "hakool",
+  "version": "1.0.0",
+  "description": "3D Game Engine for Web",
+  "main": "lib/hakool.js",
+  "types": "lib/hakool.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaxMald/Hakool.git"
+  },
+  "author": "Max Alberto Solano Maldonado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaxMald/Hakool/issues"
+  },
+  "homepage": "https://github.com/MaxMald/Hakool#readme",
+  "dependencies": {
+    "http-server": "^0.12.3",
+    "typescript": "^3.9.7"
+  }
+}
