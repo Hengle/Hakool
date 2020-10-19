@@ -148,6 +148,10 @@ export const HK_OPRESULT = Object.freeze
 });
 
 /****************************************************/
+/* Log Message ID                                   */
+/****************************************************/
+
+/****************************************************/
 /* System IDs                                       */
 /****************************************************/
 
@@ -164,6 +168,11 @@ export const HK_SYSTEM_ID = Object.freeze
   /**
    * Graphics System.
    */
-  kGraphics : 0 as 0
+  kGraphics: 0 as 0,
+
+  /**
+   * Scene manager.
+   * */
+  kSceneManager: 1 as 1
 
 })

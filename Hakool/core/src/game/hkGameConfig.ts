@@ -15,8 +15,16 @@ import { HkGraphicsConfig } from "../systems/graphics/hkGraphicsConfig";
  */
 export class HkGameConfig
 {
+
+  constructor()
+  {
+    this.graphics = new HkGraphicsConfig("");
+
+    return;
+  }
+
   /**
    * Configuration object for the Graphics Module..
    */
-  graphics : HkGraphicsConfig;
+  graphics: HkGraphicsConfig;
 }

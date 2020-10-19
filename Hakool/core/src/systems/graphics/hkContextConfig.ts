@@ -3,14 +3,15 @@
  *
  * @summary 
  *
- * @file hkContextConfig.ts
+ * @file HkContextConfig.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-08-2020
  */
 
+import { HkColor } from "../../utilities/hkColor";
 import { HK_POWER_PREFERENCE } from "../../utilities/hkEnums";
 
-export class hkContextConfig
+export class HkContextConfig
 {
 
   /**
@@ -33,8 +34,9 @@ export class hkContextConfig
     _bAlpha ?: boolean,
     _bDepth ?: boolean,
     _bStencil ?: boolean,
-    _bAntialias ?: boolean,
-    _powerPreference ?: HK_POWER_PREFERENCE
+    _bAntialias?: boolean,
+    _clearColor?: HkColor,
+    _powerPreference?: HK_POWER_PREFERENCE
   )
   {
     // Alpha buffer.
@@ -70,7 +72,7 @@ export class hkContextConfig
       this.stencil = false;
     }
 
-    // Antialias.
+    // Anti alias.
 
     if(_bAntialias !== undefined)
     {
@@ -79,6 +81,17 @@ export class hkContextConfig
     else
     {
       this.antialias = true;
+    }
+
+    // Back Color
+
+    if (_clearColor !== undefined)
+    {
+      this.clearColor = _clearColor;
+    }
+    else
+    {
+      this.clearColor = new HkColor(1.0, 0.0, 1.0, 1.0);
     }
 
     // Power preference.
@@ -96,28 +109,33 @@ export class hkContextConfig
   /**
    * Boolean that indicates whether the canvas contains an alpha buffer.
    */
-  alpha : boolean;
+  alpha: boolean;
 
   /**
    * Boolean that indicates if the drawing buffer has a depth buffer of at least
    * 16 bits.
    */
-  depth : boolean;
+  depth: boolean;
 
   /**
    * Boolean that indicates that the drawing buffer has a stencil buffer of at
    * least 8 bits.
    */
-  stencil : boolean;
+  stencil: boolean;
 
   /**
    * Boolean that indicates whether or not to perform anti-aliasing.
    */
-  antialias : boolean;
+  antialias: boolean;
 
   /**
    * A hint to the user agent indicating what configuration of GPU is suitable
    * for the WebGL context.
    */
-  powerPreference : HK_POWER_PREFERENCE;
+  powerPreference: HK_POWER_PREFERENCE;
+
+  /**
+   * Clear color.
+   **/
+  clearColor: HkColor;
 }

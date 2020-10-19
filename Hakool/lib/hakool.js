@@ -11,18 +11,14 @@ define("hakool", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Hakool = void 0;
-    class Hakool {
-        constructor() {
+    var Hakool = /** @class */ (function () {
+        function Hakool() {
             console.log("Hakool class.");
             return;
         }
-    }
+        return Hakool;
+    }());
     exports.Hakool = Hakool;
-});
-define("index", ["require", "exports", "hakool"], function (require, exports, hakool_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    Object.defineProperty(exports, "Hakool", { enumerable: true, get: function () { return hakool_1.Hakool; } });
 });
 /**
  * HummingFlight Software Technologies - 2020
@@ -160,7 +156,101 @@ define("utilities/hkCommons", ["require", "exports", "utilities/hkEnums"], funct
  *
  * @summary
  *
- * @file hkIContext.ts
+ * @file hkVector4.ts
+ * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
+ * @since October-19-2020
+ */
+define("utilities/hkVector4", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.HkVector4 = void 0;
+    var HkVector4 = /** @class */ (function () {
+        function HkVector4(_x, _y, _z, _w) {
+            if (_x !== undefined) {
+                this.x = _x;
+            }
+            if (_y !== undefined) {
+                this.y = _y;
+            }
+            else {
+                this.y = 0.0;
+            }
+            if (_z !== undefined) {
+                this.z = _z;
+            }
+            else {
+                this.z = 0.0;
+            }
+            if (_w !== undefined) {
+                this.w = _w;
+            }
+            else {
+                this.w = 0.0;
+            }
+            return;
+        }
+        HkVector4.prototype.set = function (_x, _y, _z, _w) {
+            if (_x !== undefined) {
+                this.x = _x;
+            }
+            if (_y !== undefined) {
+                this.y = _y;
+            }
+            if (_z !== undefined) {
+                this.z = _z;
+            }
+            if (_w !== undefined) {
+                this.w = _w;
+            }
+            return;
+        };
+        HkVector4.prototype.scale = function (_scalar) {
+            this.x *= _scalar;
+            this.y *= _scalar;
+            this.z *= _scalar;
+            this.w *= _scalar;
+            return;
+        };
+        return HkVector4;
+    }());
+    exports.HkVector4 = HkVector4;
+});
+/**
+ * HummingFlight Software Technologies - 2020
+ *
+ * @summary
+ *
+ * @file hkColor.ts
+ * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
+ * @since October-19-2020
+ */
+define("utilities/hkColor", ["require", "exports", "utilities/hkVector4"], function (require, exports, hkVector4_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.HkColor = void 0;
+    var HkColor = /** @class */ (function () {
+        function HkColor(_r, _g, _b, _a) {
+            this.color = new hkVector4_1.HkVector4(_r, _g, _b, _a);
+            return;
+        }
+        HkColor.prototype.set = function (_r, _g, _b, _a) {
+            this.color.set(_r, _g, _b, _a);
+            return;
+        };
+        HkColor.prototype.normalize = function () {
+            this.color.scale(1.0 / 255);
+            return;
+        };
+        return HkColor;
+    }());
+    exports.HkColor = HkColor;
+});
+/**
+ * HummingFlight Software Technologies - 2020
+ *
+ * @summary
+ *
+ * @file HkIContext.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-11-2020
  */
@@ -173,46 +263,59 @@ define("systems/graphics/context/hkIContext", ["require", "exports"], function (
  *
  * @summary
  *
- * @file hkWebGLContext.ts
+ * @file HkWebGLContext.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-11-2020
  */
 define("systems/graphics/context/hkWebGLContext", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hkWebGLContext = void 0;
-    class hkWebGLContext {
+    exports.HkWebGLContext = void 0;
+    var HkWebGLContext = /** @class */ (function () {
+        function HkWebGLContext() {
+        }
         /****************************************************/
         /* Public                                           */
         /****************************************************/
-        init(_context, _api_v) {
+        HkWebGLContext.prototype.init = function (_context, _apiVersion) {
             this._m_context = _context;
-            this._m_api_version = _api_v;
+            this._m_apiVersion = _apiVersion;
             return;
-        }
-        getContext() {
+        };
+        HkWebGLContext.prototype.getContext = function () {
             return this._m_context;
-        }
-        getAPIVersion() {
-            return this._m_api_version;
-        }
-    }
-    exports.hkWebGLContext = hkWebGLContext;
+        };
+        HkWebGLContext.prototype.getAPIVersion = function () {
+            return this._m_apiVersion;
+        };
+        HkWebGLContext.prototype.setClearColor = function (_color) {
+            var color = _color.color;
+            this._m_context.clearColor(color.x, color.y, color.z, color.w);
+            return;
+        };
+        HkWebGLContext.prototype.clear = function () {
+            var context = this._m_context;
+            context.clear(context.COLOR_BUFFER_BIT);
+            return;
+        };
+        return HkWebGLContext;
+    }());
+    exports.HkWebGLContext = HkWebGLContext;
 });
 /**
  * HummingFlight Software Technologies - 2020
  *
  * @summary
  *
- * @file hkContextConfig.ts
+ * @file HkContextConfig.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-08-2020
  */
-define("systems/graphics/hkContextConfig", ["require", "exports", "utilities/hkEnums"], function (require, exports, hkEnums_2) {
+define("systems/graphics/HkContextConfig", ["require", "exports", "utilities/hkColor", "utilities/hkEnums"], function (require, exports, hkColor_1, hkEnums_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hkContextConfig = void 0;
-    class hkContextConfig {
+    exports.HkContextConfig = void 0;
+    var HkContextConfig = /** @class */ (function () {
         /**
          * Create a context configuration object.
          *
@@ -228,7 +331,7 @@ define("systems/graphics/hkContextConfig", ["require", "exports", "utilities/hkE
          * configuration of GPU is suitable for the WebGL context. Default :
          * HK_POWER_PREFERENCE.kDefault.
          */
-        constructor(_bAlpha, _bDepth, _bStencil, _bAntialias, _powerPreference) {
+        function HkContextConfig(_bAlpha, _bDepth, _bStencil, _bAntialias, _clearColor, _powerPreference) {
             // Alpha buffer.
             if (_bAlpha !== undefined) {
                 this.alpha = _bAlpha;
@@ -250,12 +353,19 @@ define("systems/graphics/hkContextConfig", ["require", "exports", "utilities/hkE
             else {
                 this.stencil = false;
             }
-            // Antialias.
+            // Anti alias.
             if (_bAntialias !== undefined) {
                 this.antialias = _bAntialias;
             }
             else {
                 this.antialias = true;
+            }
+            // Back Color
+            if (_clearColor !== undefined) {
+                this.clearColor = _clearColor;
+            }
+            else {
+                this.clearColor = new hkColor_1.HkColor(1.0, 0.0, 1.0, 1.0);
             }
             // Power preference.
             if (_powerPreference !== undefined) {
@@ -265,26 +375,27 @@ define("systems/graphics/hkContextConfig", ["require", "exports", "utilities/hkE
                 this.powerPreference = hkEnums_2.HK_POWER_PREFERENCE.kDefault;
             }
         }
-    }
-    exports.hkContextConfig = hkContextConfig;
+        return HkContextConfig;
+    }());
+    exports.HkContextConfig = HkContextConfig;
 });
 /**
  * HummingFlight Software Technologies - 2020
  *
  * @summary
  *
- * @file hkGraphicsConfig.ts
+ * @file HkGraphicsConfig.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-08-2020
  */
-define("systems/graphics/hkGraphicsConfig", ["require", "exports", "utilities/hkEnums", "systems/graphics/hkContextConfig"], function (require, exports, hkEnums_3, hkContextConfig_1) {
+define("systems/graphics/hkGraphicsConfig", ["require", "exports", "utilities/hkEnums", "systems/graphics/HkContextConfig"], function (require, exports, hkEnums_3, HkContextConfig_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hkGraphicsConfig = void 0;
+    exports.HkGraphicsConfig = void 0;
     /**
      * Configures the graphics system.
      */
-    class hkGraphicsConfig {
+    var HkGraphicsConfig = /** @class */ (function () {
         /**
          * Graphic configuration.
          *
@@ -294,34 +405,35 @@ define("systems/graphics/hkGraphicsConfig", ["require", "exports", "utilities/hk
          * HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental.
          * @param _context_configuration The graphics context configuration object.
          */
-        constructor(_canvas_id = "", _api_version, _context_configuration) {
+        function HkGraphicsConfig(_canvasId, _apiVersion, _contextConfiguration) {
             // HTML canvas element ID.
-            this.canvas_id = _canvas_id;
+            this.canvasId = _canvasId;
             // Graphics API version.
-            if (_api_version !== undefined) {
-                this.api_version = _api_version;
+            if (_apiVersion !== undefined) {
+                this.apiVersion = _apiVersion;
             }
             else {
-                this.api_version = hkEnums_3.HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental;
+                this.apiVersion = hkEnums_3.HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental;
             }
             // Graphics context configuration.
-            if (_context_configuration !== undefined) {
-                this.context_configuration = _context_configuration;
+            if (_contextConfiguration !== undefined) {
+                this.contextConfiguration = _contextConfiguration;
             }
             else {
-                this.context_configuration = new hkContextConfig_1.hkContextConfig;
+                this.contextConfiguration = new HkContextConfig_1.HkContextConfig();
             }
             return;
         }
-    }
-    exports.hkGraphicsConfig = hkGraphicsConfig;
+        return HkGraphicsConfig;
+    }());
+    exports.HkGraphicsConfig = HkGraphicsConfig;
 });
 /**
  * HummingFlight Software Technologies - 2020
  *
  * @summary
  *
- * @file hkISystem.ts
+ * @file HkISystem.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-08-2020
  */
@@ -338,7 +450,7 @@ define("systems/hkISystem", ["require", "exports"], function (require, exports) 
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-08-2020
  */
-define("systems/graphics/hkIGraphics", ["require", "exports"], function (require, exports) {
+define("systems/graphics/HkIGraphics", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
@@ -347,32 +459,31 @@ define("systems/graphics/hkIGraphics", ["require", "exports"], function (require
  *
  * @summary
  *
- * @file hkGraphicsWebGL.ts
+ * @file HkGraphicsWebGL.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-08-2020
  */
-define("systems/graphics/hkGraphicsWebGL", ["require", "exports", "utilities/hkCommons", "utilities/hkEnums", "systems/graphics/context/hkWebGLContext"], function (require, exports, hkCommons_1, hkEnums_4, hkWebGLContext_1) {
+define("systems/graphics/HkGraphicsWebGL", ["require", "exports", "utilities/hkCommons", "utilities/hkEnums", "systems/graphics/context/hkWebGLContext"], function (require, exports, hkCommons_1, hkEnums_4, hkWebGLContext_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hkGraphicsWebGL = void 0;
-    class hkGraphicsWebGL {
+    exports.HkGraphicsWebGL = void 0;
+    var HkGraphicsWebGL = /** @class */ (function () {
         /****************************************************/
         /* Private                                          */
         /****************************************************/
         /**
          * Private constructor.
          */
-        constructor() {
-            this._m_canvas = new HTMLCanvasElement();
+        function HkGraphicsWebGL() {
             return;
         }
         /**
          * Create a Graphic System.
          */
-        static Create() {
-            let graphics = new hkGraphicsWebGL();
+        HkGraphicsWebGL.Create = function () {
+            var graphics = new HkGraphicsWebGL();
             return graphics;
-        }
+        };
         /**
          * Initialize the Graphic System.
          *
@@ -387,35 +498,45 @@ define("systems/graphics/hkGraphicsWebGL", ["require", "exports", "utilities/hkC
          *
          * @returns Operation result.
          */
-        init(_config) {
+        HkGraphicsWebGL.prototype.init = function (_config, _game) {
+            this._m_APIVersion = _config.apiVersion;
             ///////////////////////////////////
             // Canvas Element
-            let canvas = document.getElementById(_config.canvas_id);
-            if (canvas === null) {
+            var element = document.getElementById(_config.canvasId);
+            if (element === null) {
                 // Log error
-                console.error('No canvas (HTML Element) with the specified ID exists. ID : '
-                    + _config.canvas_id);
+                _game.logger.logError('No HTML Element found with an ID of : '
+                    + _config.canvasId);
                 // Return result.
                 return hkEnums_4.HK_OPRESULT.kObject_not_found;
             }
+            if (!(element instanceof HTMLCanvasElement)) {
+                _game.logger.logError("The HTML Element with an ID of : "
+                    + _config.canvasId
+                    + " is not a canvas element");
+                // Return result
+                return hkEnums_4.HK_OPRESULT.kIncompatible_format;
+            }
+            var canvas = element;
+            this._m_canvas = canvas;
             ///////////////////////////////////
             // Context Configuration
             // Get the power preference string.
-            let strPowerPreference = hkCommons_1.StringifyPowerPreference(_config.context_configuration.powerPreference);
+            var strPowerPreference = hkCommons_1.StringifyPowerPreference(_config.contextConfiguration.powerPreference);
             // Create the context attributes object.
-            let contextConfig = {
-                alpha: _config.context_configuration.alpha,
-                depth: _config.context_configuration.depth,
-                stencil: _config.context_configuration.stencil,
-                antialias: _config.context_configuration.antialias,
+            var contextConfig = {
+                alpha: _config.contextConfiguration.alpha,
+                depth: _config.contextConfiguration.depth,
+                stencil: _config.contextConfiguration.stencil,
+                antialias: _config.contextConfiguration.antialias,
                 powerPreference: strPowerPreference
             };
             ///////////////////////////////////
             // Graphics Context
-            let api_v = _config.api_version;
-            let context;
-            if (api_v == hkEnums_4.HK_GRAPHICS_VERSION.kWebGL
-                || api_v == hkEnums_4.HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental) {
+            var apiVersion = _config.apiVersion;
+            var context;
+            if (apiVersion === hkEnums_4.HK_GRAPHICS_VERSION.kWebGL
+                || apiVersion === hkEnums_4.HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental) {
                 // Try to get the WebGL context.
                 context = canvas.getContext('webgl', contextConfig);
                 // or the Experimental WebGL context.
@@ -423,165 +544,128 @@ define("systems/graphics/hkGraphicsWebGL", ["require", "exports", "utilities/hkC
                     context = canvas.getContext('experimental-webgl', contextConfig);
                 }
             }
-            else if (api_v == hkEnums_4.HK_GRAPHICS_VERSION.kWebGLExperimental) {
+            else if (apiVersion === hkEnums_4.HK_GRAPHICS_VERSION.kWebGLExperimental) {
                 // Get the experimental context.
                 context = canvas.getContext('experimental-webgl', contextConfig);
             }
             else {
                 // This Graphics module doesn't support the Graphics Version
-                console.error("Graphics WebGL Module doesn't support the given version");
+                _game.logger.logError("Graphics WebGL Module doesn't support the given version");
                 return hkEnums_4.HK_OPRESULT.kIncompatible_format;
             }
             // Check if it have the context.
             if (context === null) {
-                throw new Error("Browser doesn't support WebGL.");
+                _game.logger.logError("Browser doesn't support WebGL.");
+                return hkEnums_4.HK_OPRESULT.kFail;
             }
-            // Save the context.
-            let iContext = new hkWebGLContext_1.hkWebGLContext();
-            iContext.init(context, this._m_APIVersion);
+            // Create context object.
+            var iContext = new hkWebGLContext_1.HkWebGLContext();
+            iContext.init(context, _config.apiVersion);
+            // Clear color.
+            iContext.setClearColor(_config.contextConfiguration.clearColor);
+            iContext.clear();
             this._m_context = iContext;
+            // Add system to game.
+            _game.addSystem(hkEnums_4.HK_SYSTEM_ID.kGraphics, this);
+            _game.graphics = this;
+            // Return result
             return hkEnums_4.HK_OPRESULT.kSuccess;
-        }
-        getID() {
+        };
+        HkGraphicsWebGL.prototype.getID = function () {
             return hkEnums_4.HK_SYSTEM_ID.kGraphics;
-        }
+        };
         /**
          * Get the Graphics API version of this system.
          *
          * @returns Graphics API version ID.
          */
-        getAPIVersion() {
+        HkGraphicsWebGL.prototype.getAPIVersion = function () {
             return this._m_APIVersion;
-        }
+        };
         /**
          * Get the canvas's graphics context.
          */
-        getContext() {
+        HkGraphicsWebGL.prototype.getContext = function () {
             return this._m_context;
-        }
+        };
         /**
          * Get the HTML canvas element where the application is being drawn.
          */
-        getCanvas() {
+        HkGraphicsWebGL.prototype.getCanvas = function () {
             return this._m_canvas;
-        }
-    }
-    exports.hkGraphicsWebGL = hkGraphicsWebGL;
+        };
+        return HkGraphicsWebGL;
+    }());
+    exports.HkGraphicsWebGL = HkGraphicsWebGL;
+});
+define("systems/logger/hkILogger", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 /**
  * HummingFlight Software Technologies - 2020
  *
  * @summary
  *
- * @file hkGameConfig.ts
+ * @file HkGameConfig.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-11-2020
  */
-define("game/hkGameConfig", ["require", "exports"], function (require, exports) {
+define("game/hkGameConfig", ["require", "exports", "systems/graphics/hkGraphicsConfig"], function (require, exports, hkGraphicsConfig_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hkGameConfig = void 0;
+    exports.HkGameConfig = void 0;
     /**
      * Configuration object for the game.
      */
-    class hkGameConfig {
-    }
-    exports.hkGameConfig = hkGameConfig;
+    var HkGameConfig = /** @class */ (function () {
+        function HkGameConfig() {
+            this.graphics = new hkGraphicsConfig_1.HkGraphicsConfig("");
+            return;
+        }
+        return HkGameConfig;
+    }());
+    exports.HkGameConfig = HkGameConfig;
 });
 /**
  * HummingFlight Software Technologies - 2020
  *
  * @summary
  *
- * @file hkGame.ts
- * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
- * @since September-11-2020
- */
-define("game/hkGame", ["require", "exports", "systems/graphics/hkGraphicsWebGL", "utilities/hkEnums"], function (require, exports, hkGraphicsWebGL_1, hkEnums_5) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hkGame = void 0;
-    class hkGame {
-        /****************************************************/
-        /* Private                                          */
-        /****************************************************/
-        /**
-         * Private constructor.
-         */
-        constructor() { }
-        /****************************************************/
-        /* Public                                           */
-        /****************************************************/
-        /**
-         * Create a new Hakool Game.
-         */
-        static Create(_config) {
-            let game = new hkGame();
-            // Initialize the game.
-            let oResult;
-            oResult = game._init(_config);
-            // Check operation result.
-            if (oResult !== hkEnums_5.HK_OPRESULT.kSuccess) {
-                throw new Error("Game couldn't be created.");
-            }
-            return game;
-        }
-        /**
-         * Initialize this Game.
-         */
-        _init(_config) {
-            ///////////////////////////////////
-            // Logger
-            ///////////////////////////////////
-            // Graphic System
-            let graphicsAPIv = _config.graphics.api_version;
-            let graphics = null;
-            let oPresult;
-            if (graphicsAPIv === hkEnums_5.HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental
-                || graphicsAPIv === hkEnums_5.HK_GRAPHICS_VERSION.kWebGLExperimental
-                || graphicsAPIv === hkEnums_5.HK_GRAPHICS_VERSION.kWebGL) {
-                // WebGL 1 Graphics System.
-                graphics = hkGraphicsWebGL_1.hkGraphicsWebGL.Create();
-            }
-            else {
-                // TODO
-            }
-            let hSystems = this._m_hSystems;
-            hSystems.set(graphics.getID(), graphics);
-            // Save graphics in a quick reference.
-            this._m_graphics = graphics;
-            ///////////////////////////////////
-            // TODO    
-            return hkEnums_5.HK_OPRESULT.kSuccess;
-        }
-    }
-    exports.hkGame = hkGame;
-});
-/**
- * HummingFlight Software Technologies - 2020
- *
- * @summary
- *
- * @file hkLogger.ts
+ * @file HkLogger.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-12-2020
  */
-define("logger/hkLogger", ["require", "exports"], function (require, exports) {
+define("systems/logger/hkLogger", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hkLogger = void 0;
-    class hkLogger {
+    exports.HkLogger = void 0;
+    var HkLogger = /** @class */ (function () {
         /**
          * Private constructor.
          */
-        constructor() { }
+        function HkLogger() {
+        }
         /****************************************************/
         /* Public                                           */
         /****************************************************/
-        Create(_config) {
-            let logger = new hkLogger();
+        HkLogger.Create = function (_config) {
+            var logger = new HkLogger();
+            logger._init(_config);
             return logger;
-        }
+        };
+        HkLogger.prototype.log = function (_msg) {
+            console.log(_msg);
+            return;
+        };
+        HkLogger.prototype.logError = function (_msg) {
+            console.error(_msg);
+            return;
+        };
+        HkLogger.prototype.logWarning = function (_msg) {
+            console.warn(_msg);
+            return;
+        };
         /****************************************************/
         /* Private                                          */
         /****************************************************/
@@ -589,9 +673,113 @@ define("logger/hkLogger", ["require", "exports"], function (require, exports) {
          *
          * @param _config
          */
-        _init(_config) {
+        HkLogger.prototype._init = function (_config) {
+            // TODO.
+            return;
+        };
+        return HkLogger;
+    }());
+    exports.HkLogger = HkLogger;
+});
+/**
+ * HummingFlight Software Technologies - 2020
+ *
+ * @summary
+ *
+ * @file HkGame.ts
+ * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
+ * @since September-11-2020
+ */
+define("game/hkGame", ["require", "exports", "systems/graphics/HkGraphicsWebGL", "systems/logger/hkLogger", "utilities/hkEnums"], function (require, exports, HkGraphicsWebGL_1, hkLogger_1, hkEnums_5) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.HkGame = void 0;
+    var HkGame = /** @class */ (function () {
+        /****************************************************/
+        /* Private                                          */
+        /****************************************************/
+        /**
+         * Private constructor.
+         */
+        function HkGame() {
         }
-    }
-    exports.hkLogger = hkLogger;
+        /****************************************************/
+        /* Public                                           */
+        /****************************************************/
+        /**
+         * Create a new Hakool Game.
+         */
+        HkGame.Create = function (_config) {
+            var game = new HkGame();
+            // Create system map.
+            game._m_hSystems = new Map();
+            // Initialize the game.
+            var oResult = game._init(_config);
+            // Check operation result.
+            if (oResult !== hkEnums_5.HK_OPRESULT.kSuccess) {
+                throw new Error("Game couldn't be created.");
+            }
+            return game;
+        };
+        /**
+         * Adds a system to this game.
+         *
+         * @param _id The system ID.
+         * @param _system System.
+         */
+        HkGame.prototype.addSystem = function (_id, _system) {
+            this._m_hSystems.set(_id, _system);
+            return;
+        };
+        /**
+         * Initialize this Game.
+         */
+        HkGame.prototype._init = function (_config) {
+            ///////////////////////////////////
+            // Logger
+            // Create the game logger.
+            this.logger = hkLogger_1.HkLogger.Create(_config);
+            ///////////////////////////////////
+            // Graphic System
+            var graphicsAPIv = _config.graphics.apiVersion;
+            var graphics = null;
+            var oPresult;
+            if (graphicsAPIv === hkEnums_5.HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental
+                || graphicsAPIv === hkEnums_5.HK_GRAPHICS_VERSION.kWebGLExperimental
+                || graphicsAPIv === hkEnums_5.HK_GRAPHICS_VERSION.kWebGL) {
+                // WebGL 1 Graphics System.
+                graphics = HkGraphicsWebGL_1.HkGraphicsWebGL.Create();
+            }
+            else {
+                // TODO
+            }
+            // Initialize Graphics.
+            oPresult = graphics.init(_config.graphics, this);
+            // Success operation ?
+            if (oPresult !== hkEnums_5.HK_OPRESULT.kSuccess) {
+                return oPresult;
+            }
+            ///////////////////////////////////
+            // TODO    
+            return hkEnums_5.HK_OPRESULT.kSuccess;
+        };
+        return HkGame;
+    }());
+    exports.HkGame = HkGame;
+});
+define("index", ["require", "exports", "hakool", "game/hkGame", "game/hkGameConfig", "systems/graphics/hkGraphicsConfig", "systems/graphics/HkContextConfig", "utilities/hkVector4", "utilities/hkColor", "utilities/hkEnums"], function (require, exports, hakool_1, hkGame_1, hkGameConfig_1, hkGraphicsConfig_2, hkContextConfig_1, hkVector4_2, hkColor_2, hkEnums_6) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    Object.defineProperty(exports, "Hakool", { enumerable: true, get: function () { return hakool_1.Hakool; } });
+    Object.defineProperty(exports, "HkGame", { enumerable: true, get: function () { return hkGame_1.HkGame; } });
+    Object.defineProperty(exports, "HkGameConfig", { enumerable: true, get: function () { return hkGameConfig_1.HkGameConfig; } });
+    Object.defineProperty(exports, "HkGraphicsConfig", { enumerable: true, get: function () { return hkGraphicsConfig_2.HkGraphicsConfig; } });
+    Object.defineProperty(exports, "HkContextConfig", { enumerable: true, get: function () { return hkContextConfig_1.HkContextConfig; } });
+    Object.defineProperty(exports, "HkVector4", { enumerable: true, get: function () { return hkVector4_2.HkVector4; } });
+    Object.defineProperty(exports, "HkColor", { enumerable: true, get: function () { return hkColor_2.HkColor; } });
+    Object.defineProperty(exports, "HK_GRAPHICS_VERSION", { enumerable: true, get: function () { return hkEnums_6.HK_GRAPHICS_VERSION; } });
+    Object.defineProperty(exports, "HK_POWER_PREFERENCE", { enumerable: true, get: function () { return hkEnums_6.HK_POWER_PREFERENCE; } });
+    Object.defineProperty(exports, "HK_OPRESULT", { enumerable: true, get: function () { return hkEnums_6.HK_OPRESULT; } });
+    Object.defineProperty(exports, "HK_SYSTEM_ID", { enumerable: true, get: function () { return hkEnums_6.HK_SYSTEM_ID; } });
 });
 //# sourceMappingURL=hakool.js.map

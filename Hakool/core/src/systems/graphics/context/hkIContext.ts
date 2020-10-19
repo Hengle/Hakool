@@ -3,14 +3,15 @@
  *
  * @summary 
  *
- * @file hkIContext.ts
+ * @file HkIContext.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-11-2020
  */
 
+import { HkColor } from "../../../utilities/hkColor";
 import { HK_GRAPHICS_VERSION } from "../../../utilities/hkEnums";
 
-export interface hkIContext
+export interface HkIContext
 {
   /****************************************************/
   /* Public                                           */
@@ -26,5 +27,13 @@ export interface hkIContext
    * Get the API version of this context.
    */
   getAPIVersion()
-  : HK_GRAPHICS_VERSION;
+    : HK_GRAPHICS_VERSION;
+
+  /**
+   * Set the context clear color.
+   * 
+   * @param _color color.
+   */
+  setClearColor(_color: HkColor)
+    : void;
 }

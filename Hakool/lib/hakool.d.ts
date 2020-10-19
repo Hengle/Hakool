@@ -12,9 +12,6 @@ declare module "hakool" {
         constructor();
     }
 }
-declare module "index" {
-    export { Hakool } from "hakool";
-}
 declare module "utilities/hkEnums" {
     /**
      * HummingFlight Software Technologies - 2020
@@ -129,6 +126,8 @@ declare module "utilities/hkEnums" {
     }>;
     /****************************************************/
     /****************************************************/
+    /****************************************************/
+    /****************************************************/
     export type HK_SYSTEM_ID = EnumLiteralsOf<typeof HK_SYSTEM_ID>;
     export const HK_SYSTEM_ID: Readonly<{
         /**
@@ -154,18 +153,57 @@ declare module "utilities/hkCommons" {
     import { HK_POWER_PREFERENCE } from "utilities/hkEnums";
     export function StringifyPowerPreference(_id: HK_POWER_PREFERENCE): string;
 }
+declare module "utilities/hkVector4" {
+    /**
+     * HummingFlight Software Technologies - 2020
+     *
+     * @summary
+     *
+     * @file hkVector4.ts
+     * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
+     * @since October-19-2020
+     */
+    export class HkVector4 {
+        constructor(_x?: number, _y?: number, _z?: number, _w?: number);
+        set(_x?: number, _y?: number, _z?: number, _w?: number): void;
+        scale(_scalar: number): void;
+        x: number;
+        y: number;
+        z: number;
+        w: number;
+    }
+}
+declare module "utilities/hkColor" {
+    /**
+     * HummingFlight Software Technologies - 2020
+     *
+     * @summary
+     *
+     * @file hkColor.ts
+     * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
+     * @since October-19-2020
+     */
+    import { HkVector4 } from "utilities/hkVector4";
+    export class HkColor {
+        constructor(_r?: number, _g?: number, _b?: number, _a?: number);
+        set(_r?: number, _g?: number, _b?: number, _a?: number): void;
+        normalize(): void;
+        color: HkVector4;
+    }
+}
 declare module "systems/graphics/context/hkIContext" {
     /**
      * HummingFlight Software Technologies - 2020
      *
      * @summary
      *
-     * @file hkIContext.ts
+     * @file HkIContext.ts
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-11-2020
      */
+    import { HkColor } from "utilities/hkColor";
     import { HK_GRAPHICS_VERSION } from "utilities/hkEnums";
-    export interface hkIContext {
+    export interface HkIContext {
         /****************************************************/
         /****************************************************/
         /**
@@ -176,6 +214,12 @@ declare module "systems/graphics/context/hkIContext" {
          * Get the API version of this context.
          */
         getAPIVersion(): HK_GRAPHICS_VERSION;
+        /**
+         * Set the context clear color.
+         *
+         * @param _color color.
+         */
+        setClearColor(_color: HkColor): void;
     }
 }
 declare module "systems/graphics/context/hkWebGLContext" {
@@ -184,42 +228,46 @@ declare module "systems/graphics/context/hkWebGLContext" {
      *
      * @summary
      *
-     * @file hkWebGLContext.ts
+     * @file HkWebGLContext.ts
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-11-2020
      */
+    import { HkColor } from "utilities/hkColor";
     import { HK_GRAPHICS_VERSION } from "utilities/hkEnums";
-    import { hkIContext } from "systems/graphics/context/hkIContext";
-    export class hkWebGLContext implements hkIContext {
+    import { HkIContext } from "systems/graphics/context/hkIContext";
+    export class HkWebGLContext implements HkIContext {
         /****************************************************/
         /****************************************************/
-        init(_context: WebGLRenderingContext, _api_v: HK_GRAPHICS_VERSION): void;
+        init(_context: WebGLRenderingContext, _apiVersion: HK_GRAPHICS_VERSION): void;
         getContext<T>(): T;
         getAPIVersion(): HK_GRAPHICS_VERSION;
+        setClearColor(_color: HkColor): void;
+        clear(): void;
         /****************************************************/
         /****************************************************/
         /**
          * The API Version of WebGL.
          */
-        private _m_api_version;
+        private _m_apiVersion;
         /**
          * The WebGL Rendering Context.
          */
         private _m_context;
     }
 }
-declare module "systems/graphics/hkContextConfig" {
+declare module "systems/graphics/HkContextConfig" {
     /**
      * HummingFlight Software Technologies - 2020
      *
      * @summary
      *
-     * @file hkContextConfig.ts
+     * @file HkContextConfig.ts
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-08-2020
      */
+    import { HkColor } from "utilities/hkColor";
     import { HK_POWER_PREFERENCE } from "utilities/hkEnums";
-    export class hkContextConfig {
+    export class HkContextConfig {
         /**
          * Create a context configuration object.
          *
@@ -235,7 +283,7 @@ declare module "systems/graphics/hkContextConfig" {
          * configuration of GPU is suitable for the WebGL context. Default :
          * HK_POWER_PREFERENCE.kDefault.
          */
-        constructor(_bAlpha?: boolean, _bDepth?: boolean, _bStencil?: boolean, _bAntialias?: boolean, _powerPreference?: HK_POWER_PREFERENCE);
+        constructor(_bAlpha?: boolean, _bDepth?: boolean, _bStencil?: boolean, _bAntialias?: boolean, _clearColor?: HkColor, _powerPreference?: HK_POWER_PREFERENCE);
         /**
          * Boolean that indicates whether the canvas contains an alpha buffer.
          */
@@ -259,6 +307,10 @@ declare module "systems/graphics/hkContextConfig" {
          * for the WebGL context.
          */
         powerPreference: HK_POWER_PREFERENCE;
+        /**
+         * Clear color.
+         **/
+        clearColor: HkColor;
     }
 }
 declare module "systems/graphics/hkGraphicsConfig" {
@@ -267,16 +319,16 @@ declare module "systems/graphics/hkGraphicsConfig" {
      *
      * @summary
      *
-     * @file hkGraphicsConfig.ts
+     * @file HkGraphicsConfig.ts
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-08-2020
      */
     import { HK_GRAPHICS_VERSION } from "utilities/hkEnums";
-    import { hkContextConfig } from "systems/graphics/hkContextConfig";
+    import { HkContextConfig } from "systems/graphics/HkContextConfig";
     /**
      * Configures the graphics system.
      */
-    export class hkGraphicsConfig {
+    export class HkGraphicsConfig {
         /**
          * Graphic configuration.
          *
@@ -286,19 +338,19 @@ declare module "systems/graphics/hkGraphicsConfig" {
          * HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental.
          * @param _context_configuration The graphics context configuration object.
          */
-        constructor(_canvas_id?: string, _api_version?: HK_GRAPHICS_VERSION, _context_configuration?: hkContextConfig);
+        constructor(_canvasId: string, _apiVersion?: HK_GRAPHICS_VERSION, _contextConfiguration?: HkContextConfig);
         /**
          * The HTML Element Id where the application is going to be drawn.
          */
-        canvas_id: string;
+        canvasId: string;
         /**
          * The graphics context configuration.
          */
-        context_configuration: hkContextConfig;
+        contextConfiguration: HkContextConfig;
         /**
          * The Graphics API version ID.
          */
-        api_version: HK_GRAPHICS_VERSION;
+        apiVersion: HK_GRAPHICS_VERSION;
     }
 }
 declare module "systems/hkISystem" {
@@ -307,12 +359,12 @@ declare module "systems/hkISystem" {
      *
      * @summary
      *
-     * @file hkISystem.ts
+     * @file HkISystem.ts
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-08-2020
      */
     import { HK_SYSTEM_ID } from "utilities/hkEnums";
-    export interface hkISystem {
+    export interface HkISystem {
         /**
          * Get the system identifier.
          *
@@ -321,7 +373,7 @@ declare module "systems/hkISystem" {
         getID(): HK_SYSTEM_ID;
     }
 }
-declare module "systems/graphics/hkIGraphics" {
+declare module "systems/graphics/HkIGraphics" {
     /**
      * HummingFlight Software Technologies - 2020
      *
@@ -331,11 +383,12 @@ declare module "systems/graphics/hkIGraphics" {
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-08-2020
      */
+    import { HkGame } from "game/hkGame";
     import { HK_GRAPHICS_VERSION, HK_OPRESULT } from "utilities/hkEnums";
-    import { hkISystem } from "systems/hkISystem";
-    import { hkIContext } from "systems/graphics/context/hkIContext";
-    import { hkGraphicsConfig } from "systems/graphics/hkGraphicsConfig";
-    export interface hkIGraphics extends hkISystem {
+    import { HkISystem } from "systems/hkISystem";
+    import { HkIContext } from "systems/graphics/context/hkIContext";
+    import { HkGraphicsConfig } from "systems/graphics/hkGraphicsConfig";
+    export interface HkIGraphics extends HkISystem {
         /**
          * Initialize the Graphic System.
          *
@@ -348,7 +401,7 @@ declare module "systems/graphics/hkIGraphics" {
          *
          * @returns Operation result.
          */
-        init(_config: hkGraphicsConfig): HK_OPRESULT;
+        init(_config: HkGraphicsConfig, _game: HkGame): HK_OPRESULT;
         /**
          * Get the HTML canvas element where the application is being drawn.
          */
@@ -356,23 +409,33 @@ declare module "systems/graphics/hkIGraphics" {
         /**
          * Get the canvas's graphics context.
          */
-        getContext(): hkIContext;
+        getContext(): HkIContext;
         /**
          * Get the Graphics API version of this system.
          */
         getAPIVersion(): HK_GRAPHICS_VERSION;
     }
 }
-declare module "systems/graphics/hkGraphicsWebGL" {
+declare module "systems/graphics/HkGraphicsWebGL" {
+    /**
+     * HummingFlight Software Technologies - 2020
+     *
+     * @summary
+     *
+     * @file HkGraphicsWebGL.ts
+     * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
+     * @since September-08-2020
+     */
+    import { HkGame } from "game/hkGame";
     import { HK_GRAPHICS_VERSION, HK_OPRESULT, HK_SYSTEM_ID } from "utilities/hkEnums";
-    import { hkIContext } from "systems/graphics/context/hkIContext";
-    import { hkGraphicsConfig } from "systems/graphics/hkGraphicsConfig";
-    import { hkIGraphics } from "systems/graphics/hkIGraphics";
-    export class hkGraphicsWebGL implements hkIGraphics {
+    import { HkIContext } from "systems/graphics/context/hkIContext";
+    import { HkGraphicsConfig } from "systems/graphics/hkGraphicsConfig";
+    import { HkIGraphics } from "systems/graphics/HkIGraphics";
+    export class HkGraphicsWebGL implements HkIGraphics {
         /**
          * Create a Graphic System.
          */
-        static Create(): hkGraphicsWebGL;
+        static Create(): HkGraphicsWebGL;
         /**
          * Initialize the Graphic System.
          *
@@ -387,7 +450,7 @@ declare module "systems/graphics/hkGraphicsWebGL" {
          *
          * @returns Operation result.
          */
-        init(_config: hkGraphicsConfig): HK_OPRESULT;
+        init(_config: HkGraphicsConfig, _game: HkGame): HK_OPRESULT;
         getID(): HK_SYSTEM_ID;
         /**
          * Get the Graphics API version of this system.
@@ -398,7 +461,7 @@ declare module "systems/graphics/hkGraphicsWebGL" {
         /**
          * Get the canvas's graphics context.
          */
-        getContext(): hkIContext;
+        getContext(): HkIContext;
         /**
          * Get the HTML canvas element where the application is being drawn.
          */
@@ -423,71 +486,54 @@ declare module "systems/graphics/hkGraphicsWebGL" {
         private _m_APIVersion;
     }
 }
+declare module "systems/logger/hkILogger" {
+    export interface HkILogger {
+        log(_msg: string): void;
+        logError(_msg: string): void;
+        logWarning(_msg: string): void;
+    }
+}
 declare module "game/hkGameConfig" {
     /**
      * HummingFlight Software Technologies - 2020
      *
      * @summary
      *
-     * @file hkGameConfig.ts
+     * @file HkGameConfig.ts
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-11-2020
      */
-    import { hkGraphicsConfig } from "systems/graphics/hkGraphicsConfig";
+    import { HkGraphicsConfig } from "systems/graphics/hkGraphicsConfig";
     /**
      * Configuration object for the game.
      */
-    export class hkGameConfig {
+    export class HkGameConfig {
+        constructor();
         /**
          * Configuration object for the Graphics Module..
          */
-        graphics: hkGraphicsConfig;
+        graphics: HkGraphicsConfig;
     }
 }
-declare module "game/hkGame" {
-    import { hkGameConfig } from "game/hkGameConfig";
-    export class hkGame {
-        /****************************************************/
-        /****************************************************/
-        /**
-         * Create a new Hakool Game.
-         */
-        static Create(_config: hkGameConfig): hkGame;
-        /****************************************************/
-        /****************************************************/
-        /**
-         * Private constructor.
-         */
-        private constructor();
-        /**
-         * Initialize this Game.
-         */
-        private _init;
-        /**
-         * Reference to the graphics system, also saved in the table of systems.
-         */
-        private _m_graphics;
-        /**
-         * Table of the engine systems.
-         */
-        private _m_hSystems;
-    }
-}
-declare module "logger/hkLogger" {
+declare module "systems/logger/hkLogger" {
     /**
      * HummingFlight Software Technologies - 2020
      *
      * @summary
      *
-     * @file hkLogger.ts
+     * @file HkLogger.ts
      * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
      * @since September-12-2020
      */
-    import { hkGameConfig } from "game/hkGameConfig";
-    export class hkLogger {
+    import { HkGameConfig } from "game/hkGameConfig";
+    import { HkILogger } from "systems/logger/hkILogger";
+    export class HkLogger implements HkILogger {
         /****************************************************/
         /****************************************************/
-        Create(_config: hkGameConfig): hkLogger;
+        static Create(_config: HkGameConfig): HkLogger;
+        log(_msg: string): void;
+        logError(_msg: string): void;
+        logWarning(_msg: string): void;
         /****************************************************/
         /****************************************************/
         /**
@@ -499,6 +545,59 @@ declare module "logger/hkLogger" {
          * Private constructor.
          */
         private constructor();
-        private _m_;
     }
+}
+declare module "game/hkGame" {
+    import { HkIGraphics } from "systems/graphics/HkIGraphics";
+    import { HkISystem } from "systems/hkISystem";
+    import { HkILogger } from "systems/logger/hkILogger";
+    import { HK_SYSTEM_ID } from "utilities/hkEnums";
+    import { HkGameConfig } from "game/hkGameConfig";
+    export class HkGame {
+        /****************************************************/
+        /****************************************************/
+        /**
+         * Create a new Hakool Game.
+         */
+        static Create(_config: HkGameConfig): HkGame;
+        /**
+         * Adds a system to this game.
+         *
+         * @param _id The system ID.
+         * @param _system System.
+         */
+        addSystem(_id: HK_SYSTEM_ID, _system: HkISystem): void;
+        /**
+         * The Logger Manager of the Game.
+         * */
+        logger: HkILogger;
+        /**
+         * Reference to the graphics system.
+         */
+        graphics: HkIGraphics;
+        /****************************************************/
+        /****************************************************/
+        /**
+         * Private constructor.
+         */
+        private constructor();
+        /**
+         * Initialize this Game.
+         */
+        private _init;
+        /**
+         * Table of the engine systems.
+         */
+        private _m_hSystems;
+    }
+}
+declare module "index" {
+    export { Hakool } from "hakool";
+    export { HkGame } from "game/hkGame";
+    export { HkGameConfig } from "game/hkGameConfig";
+    export { HkGraphicsConfig } from "systems/graphics/hkGraphicsConfig";
+    export { HkContextConfig } from "systems/graphics/HkContextConfig";
+    export { HkVector4 } from "utilities/hkVector4";
+    export { HkColor } from "utilities/hkColor";
+    export { HK_GRAPHICS_VERSION, HK_POWER_PREFERENCE, HK_OPRESULT, HK_SYSTEM_ID } from "utilities/hkEnums";
 }

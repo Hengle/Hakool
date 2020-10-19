@@ -1,10 +1,10 @@
 {
-  "compilerOptions": 
-  {
-    
-    "outDir": "../lib/",
-    "rootDir": "./src/",
-    "outFile": "../lib/hakool.js",
+  "compilerOptions": {
+    "outDir": "../../../lib/",
+    "rootDir": "../../src/",
+    "outFile": "../../../lib2/hakool.js",
+
+    "composite": true,
 
     "target": "es5",
 
@@ -31,5 +31,9 @@
       "ES2015.Collection",
       "scripthost"
     ]
-  }
+  },
+
+  "include": [
+    "../../src/**/*"
+  ]
 }

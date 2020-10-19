@@ -28,35 +28,35 @@ export class HkGraphicsConfig
    */
   constructor
   (
-    _canvas_id : string = "",
-    _api_version ?: HK_GRAPHICS_VERSION,
-    _context_configuration ?: HkContextConfig
+    _canvasId: string,
+    _apiVersion?: HK_GRAPHICS_VERSION,
+    _contextConfiguration?: HkContextConfig
   )
   {
     // HTML canvas element ID.
 
-    this.canvas_id = _canvas_id;
+    this.canvasId = _canvasId;
 
     // Graphics API version.
 
-    if(_api_version !== undefined)
+    if(_apiVersion !== undefined)
     {
-      this.api_version = _api_version;
+      this.apiVersion = _apiVersion;
     }
     else
     {
-      this.api_version = HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental;
+      this.apiVersion = HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental;
     }
 
     // Graphics context configuration.
 
-    if(_context_configuration !== undefined)
+    if(_contextConfiguration !== undefined)
     {
-      this.context_configuration = _context_configuration;
+      this.contextConfiguration = _contextConfiguration;
     }
     else
     {
-      this.context_configuration = new HkContextConfig;
+      this.contextConfiguration = new HkContextConfig();
     }
 
     return;
@@ -65,15 +65,15 @@ export class HkGraphicsConfig
   /**
    * The HTML Element Id where the application is going to be drawn.
    */
-  canvas_id : string;
+  canvasId: string;
 
   /**
    * The graphics context configuration.
    */
-  context_configuration : HkContextConfig;
+  contextConfiguration: HkContextConfig;
 
   /**
    * The Graphics API version ID.
    */
-  api_version : HK_GRAPHICS_VERSION;
+  apiVersion: HK_GRAPHICS_VERSION;
 }

@@ -8,15 +8,16 @@
  * @since September-08-2020
  */
 
+import { HkGame } from "../../game/hkGame";
 import { StringifyPowerPreference } from "../../utilities/hkCommons";
 import { HK_GRAPHICS_VERSION, HK_OPRESULT, HK_SYSTEM_ID } from "../../utilities/hkEnums";
 import { HkIContext } from "./context/hkIContext";
 import { HkWebGLContext } from "./context/hkWebGLContext";
 import { HkGraphicsConfig } from "./hkGraphicsConfig";
-import { hkIGraphics } from "./hkIGraphics";
+import { HkIGraphics } from "./HkIGraphics";
 
 export class HkGraphicsWebGL
-implements hkIGraphics
+implements HkIGraphics
 {
   /**
    * Create a Graphic System.
@@ -24,7 +25,7 @@ implements hkIGraphics
   static Create()
   : HkGraphicsWebGL
   {
-    let graphics : HkGraphicsWebGL = new HkGraphicsWebGL();
+    const graphics: HkGraphicsWebGL = new HkGraphicsWebGL();
     return graphics;
   }
 
@@ -42,24 +43,26 @@ implements hkIGraphics
    * 
    * @returns Operation result. 
    */
-  init(_config : HkGraphicsConfig)
+  init(_config: HkGraphicsConfig, _game: HkGame)
   : HK_OPRESULT
   {
+
+    this._m_APIVersion = _config.apiVersion;
 
     ///////////////////////////////////
     // Canvas Element
 
-    let canvas : HTMLCanvasElement 
-      = <HTMLCanvasElement>document.getElementById(_config.canvas_id);
+    const element: HTMLElement
+      = document.getElementById(_config.canvasId);
 
-    if(canvas === null)
+    if (element === null)
     {
       // Log error
 
-      console.error
+      _game.logger.logError
       (
-        'No canvas (HTML Element) with the specified ID exists. ID : ' 
-        + _config.canvas_id
+        'No HTML Element found with an ID of : '
+        + _config.canvasId
       );
 
       // Return result.
@@ -67,26 +70,45 @@ implements hkIGraphics
       return HK_OPRESULT.kObject_not_found;
     }
 
+    if (!(element instanceof HTMLCanvasElement))
+    {
+
+      _game.logger.logError
+      (
+        "The HTML Element with an ID of : "
+        + _config.canvasId
+        + " is not a canvas element"
+      );
+
+      // Return result
+
+      return HK_OPRESULT.kIncompatible_format;
+    }
+
+    const canvas: HTMLCanvasElement = element as HTMLCanvasElement;
+
+    this._m_canvas = canvas;
+
     ///////////////////////////////////
     // Context Configuration
 
     // Get the power preference string.
     
-    let strPowerPreference : string 
-      = StringifyPowerPreference(_config.context_configuration.powerPreference);
+    let strPowerPreference: string
+      = StringifyPowerPreference(_config.contextConfiguration.powerPreference);
 
     // Create the context attributes object.
 
     let contextConfig : object = 
     {
       
-      alpha : _config.context_configuration.alpha,
+      alpha : _config.contextConfiguration.alpha,
 
-      depth : _config.context_configuration.depth,
+      depth : _config.contextConfiguration.depth,
 
-      stencil : _config.context_configuration.stencil,
+      stencil : _config.contextConfiguration.stencil,
 
-      antialias : _config.context_configuration.antialias,
+      antialias : _config.contextConfiguration.antialias,
 
       powerPreference : strPowerPreference
 
@@ -95,50 +117,53 @@ implements hkIGraphics
     ///////////////////////////////////
     // Graphics Context
 
-    let api_v = _config.api_version;
+    const apiVersion = _config.apiVersion;
 
-    let context : WebGLRenderingContext;
+    let context: WebGLRenderingContext;
 
     if
     (
-      api_v == HK_GRAPHICS_VERSION.kWebGL
-      || api_v == HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental
+      apiVersion === HK_GRAPHICS_VERSION.kWebGL
+      || apiVersion === HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental
     )
     {
       // Try to get the WebGL context.
 
-      context = <WebGLRenderingContext>canvas.getContext
+      context = canvas.getContext
       (
         'webgl', 
         contextConfig
-      );
+      ) as WebGLRenderingContext;
 
       // or the Experimental WebGL context.
 
       if(context === null)
       {
-        context = <WebGLRenderingContext>canvas.getContext
+        context = canvas.getContext
         (
           'experimental-webgl',
           contextConfig
-        );
+        ) as WebGLRenderingContext;
       }
     }
-    else if(api_v == HK_GRAPHICS_VERSION.kWebGLExperimental)
+    else if (apiVersion === HK_GRAPHICS_VERSION.kWebGLExperimental)
     {
       // Get the experimental context.
 
-      context = <WebGLRenderingContext>canvas.getContext
+      context = canvas.getContext
       (
         'experimental-webgl',
         contextConfig
-      );
+      ) as WebGLRenderingContext;
     }
     else
     {
       // This Graphics module doesn't support the Graphics Version
 
-      console.error("Graphics WebGL Module doesn't support the given version");
+      _game.logger.logError
+      (
+        "Graphics WebGL Module doesn't support the given version"
+      );
       
       return HK_OPRESULT.kIncompatible_format;
     }
@@ -147,16 +172,35 @@ implements hkIGraphics
 
     if(context === null)
     {
-      throw new Error("Browser doesn't support WebGL.");
+      _game.logger.logError
+      (
+        "Browser doesn't support WebGL."
+      );
+
+      return HK_OPRESULT.kFail;
     }
 
-    // Save the context.
+    // Create context object.
 
-    let iContext : HkWebGLContext = new HkWebGLContext();
+    const iContext: HkWebGLContext = new HkWebGLContext();
 
-    iContext.init(context, this._m_APIVersion);
+    iContext.init(context, _config.apiVersion);
+
+    // Clear color.
+
+    iContext.setClearColor(_config.contextConfiguration.clearColor);
+
+    iContext.clear();
 
     this._m_context = iContext;
+
+    // Add system to game.
+
+    _game.addSystem(HK_SYSTEM_ID.kGraphics, this);
+
+    _game.graphics = this;
+
+    // Return result
 
     return HK_OPRESULT.kSuccess;
   }
@@ -205,23 +249,21 @@ implements hkIGraphics
    */
   constructor()
   {
-    this._m_canvas = new HTMLCanvasElement();
-
     return;
   }
   
   /**
    * The HTML canvas element where the application is being drawn.
    */
-  private _m_canvas : HTMLCanvasElement;
+  private _m_canvas: HTMLCanvasElement;
 
   /**
    * The Canvas's WebGL rendering context.
    */
-  private _m_context : HkWebGLContext;
+  private _m_context: HkWebGLContext;
 
   /**
    * The graphics API version of this system.
    */
-  private _m_APIVersion : HK_GRAPHICS_VERSION;
+  private _m_APIVersion: HK_GRAPHICS_VERSION;
 }

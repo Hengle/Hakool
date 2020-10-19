@@ -8,20 +8,45 @@
  * @since September-12-2020
  */
 
-import { HkGameConfig } from "../game/hkGameConfig";
+import { HkGameConfig } from "../../game/hkGameConfig";
+import { HkILogger } from "./hkILogger";
 
 export class HkLogger
+  implements HkILogger
 {
   /****************************************************/
   /* Public                                           */
   /****************************************************/
   
-  Create(_config : HkGameConfig)
+  static Create(_config: HkGameConfig)
   : HkLogger
   {
-    let logger : HkLogger = new HkLogger();
+    const logger: HkLogger = new HkLogger();
+
+    logger._init(_config);
 
     return logger;
+  }
+
+  log(_msg: string)
+    : void {
+
+    console.log(_msg);
+    return;
+  }
+
+  logError(_msg: string)
+    : void {
+
+    console.error(_msg);
+    return;
+  }
+
+  logWarning(_msg: string)
+    : void {
+
+    console.warn(_msg);
+    return;
   }
 
   /****************************************************/
@@ -32,9 +57,11 @@ export class HkLogger
    * 
    * @param _config 
    */
-  private _init(_config : HkGameConfig)
+  private _init(_config: HkGameConfig)
   : void
   {
+    // TODO.
+
     return;
   }
 

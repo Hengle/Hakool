@@ -8,9 +8,11 @@
  * @since September-11-2020
  */
 
-import { hkGraphicsWebGL } from "../systems/graphics/hkGraphicsWebGL";
-import { hkIGraphics } from "../systems/graphics/hkIGraphics";
-import { hkISystem } from "../systems/hkISystem";
+import { HkGraphicsWebGL } from "../systems/graphics/HkGraphicsWebGL";
+import { HkIGraphics } from "../systems/graphics/HkIGraphics";
+import { HkISystem } from "../systems/HkISystem";
+import { HkILogger } from "../systems/logger/hkILogger";
+import { HkLogger } from "../systems/logger/hkLogger";
 import { HK_GRAPHICS_VERSION, HK_OPRESULT, HK_SYSTEM_ID } from "../utilities/hkEnums";
 import { HkGameConfig } from "./hkGameConfig";
 
@@ -23,16 +25,18 @@ export class HkGame
   /**
    * Create a new Hakool Game.
    */
-  static Create(_config : HkGameConfig)
+  static Create(_config: HkGameConfig)
   : HkGame
   {
-    let game : HkGame = new HkGame();
+    const game: HkGame = new HkGame();
+
+    // Create system map.
+
+    game._m_hSystems = new Map<HK_SYSTEM_ID, HkISystem>();
 
     // Initialize the game.
     
-    let oResult : HK_OPRESULT;
-
-    oResult = game._init(_config);
+    let oResult: HK_OPRESULT = game._init(_config);
 
     // Check operation result.
 
@@ -43,6 +47,29 @@ export class HkGame
 
     return game;
   }
+
+  /**
+   * Adds a system to this game.
+   * 
+   * @param _id The system ID.
+   * @param _system System.
+   */
+  addSystem(_id: HK_SYSTEM_ID, _system: HkISystem)
+  : void
+  {
+    this._m_hSystems.set(_id, _system);
+    return;
+  }
+
+  /**
+   * The Logger Manager of the Game.
+   * */
+  logger: HkILogger;
+
+  /**
+   * Reference to the graphics system.
+   */
+  graphics: HkIGraphics;
 
   /****************************************************/
   /* Private                                          */
@@ -57,22 +84,24 @@ export class HkGame
   /**
    * Initialize this Game.
    */
-  private _init(_config : HkGameConfig)
+  private _init(_config: HkGameConfig)
   : HK_OPRESULT
   {
     ///////////////////////////////////
     // Logger
 
+    // Create the game logger.
 
+    this.logger = HkLogger.Create(_config);
 
     ///////////////////////////////////
     // Graphic System
 
-    let graphicsAPIv = _config.graphics.api_version
+    const graphicsAPIv = _config.graphics.apiVersion
 
-    let graphics : hkIGraphics = null;
+    let graphics: HkIGraphics = null;
 
-    let oPresult : HK_OPRESULT;
+    let oPresult: HK_OPRESULT;
 
     if
     (
@@ -83,34 +112,32 @@ export class HkGame
     {
       // WebGL 1 Graphics System.
       
-      graphics = hkGraphicsWebGL.Create();      
+      graphics = HkGraphicsWebGL.Create();
     }
     else
     {
       // TODO
     }
 
-    let hSystems = this._m_hSystems;
+    // Initialize Graphics.
 
-    hSystems.set(graphics.getID(), graphics);
+    oPresult = graphics.init(_config.graphics, this);
 
-    // Save graphics in a quick reference.
+    // Success operation ?
 
-    this._m_graphics = graphics;
+    if (oPresult !== HK_OPRESULT.kSuccess)
+    {
+      return oPresult;
+    }
 
     ///////////////////////////////////
     // TODO    
 
     return HK_OPRESULT.kSuccess;
-  }
-
-  /**
-   * Reference to the graphics system, also saved in the table of systems.
-   */
-  private _m_graphics : hkIGraphics;
+  }  
 
   /**
    * Table of the engine systems.
    */
-  private _m_hSystems : Map<HK_SYSTEM_ID, hkISystem>;
+  private _m_hSystems: Map<HK_SYSTEM_ID, HkISystem>;  
 }

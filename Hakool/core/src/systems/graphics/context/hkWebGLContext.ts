@@ -3,26 +3,28 @@
  *
  * @summary 
  *
- * @file hkWebGLContext.ts
+ * @file HkWebGLContext.ts
  * @author Max Alberto Solano Maldonado <nuup20@gmail.com>
  * @since September-11-2020
  */
 
+import { HkColor } from "../../../utilities/hkColor";
 import { HK_GRAPHICS_VERSION } from "../../../utilities/hkEnums";
+import { HkVector4 } from "../../../utilities/hkVector4";
 import { HkIContext } from "./HkIContext";
 
-export class hkWebGLContext
-implements HkIContext
+export class HkWebGLContext
+  implements HkIContext
 {
   /****************************************************/
   /* Public                                           */
   /****************************************************/
   
-  init(_context : WebGLRenderingContext, _api_v : HK_GRAPHICS_VERSION)
+  init(_context: WebGLRenderingContext, _apiVersion: HK_GRAPHICS_VERSION)
   : void
   {
     this._m_context = _context;
-    this._m_api_version = _api_v;
+    this._m_apiVersion = _apiVersion;
     return;
   }
 
@@ -35,7 +37,27 @@ implements HkIContext
   getAPIVersion()
   : HK_GRAPHICS_VERSION 
   {
-    return this._m_api_version;
+    return this._m_apiVersion;
+  }
+
+  setClearColor(_color: HkColor)
+  : void
+  {
+    const color: HkVector4 = _color.color;
+
+    this._m_context.clearColor(color.x, color.y, color.z, color.w);
+
+    return;
+  }
+
+  clear()
+  : void
+  {
+    const context = this._m_context;
+
+    context.clear(context.COLOR_BUFFER_BIT);
+
+    return;
   }
 
   /****************************************************/
@@ -45,7 +67,7 @@ implements HkIContext
   /**
    * The API Version of WebGL.
    */
-  private _m_api_version : HK_GRAPHICS_VERSION;
+  private _m_apiVersion : HK_GRAPHICS_VERSION;
 
   /**
    * The WebGL Rendering Context.

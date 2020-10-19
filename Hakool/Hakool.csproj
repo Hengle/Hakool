@@ -56,8 +56,19 @@
     <TypeScriptSourceRoot />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="core\tsconfig.json" />
+    <Content Include="core\tsconfig-base.json" />
+    <Content Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </Content>
     <Content Include="lib\hakool.js.map" />
+    <Content Include="core\configs\library\tsconfig.json" />
+    <Content Include="core\configs\testApp\tsconfig.json" />
+    <Content Include="core\tsconfig.json" />
+    <TypeScriptCompile Include="core\src\utilities\hkColor.ts" />
+    <TypeScriptCompile Include="core\src\utilities\hkVector4.ts" />
+    <TypeScriptCompile Include="test\apps\testApp\appTest.ts" />
+    <Content Include="test\css\style.css" />
+    <Content Include="test\tsconfig.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -68,6 +79,12 @@
   <ItemGroup>
     <Content Include="index.html" />
     <Content Include="lib\hakool.js" />
+    <Content Include="test\index.html" />
+    <Content Include="test\js\requirejs\require.js" />
+    <Content Include="test\main.js" />
+    <Content Include="test\thumbs\hakool_profile_1024.png" />
+    <Content Include="test\thumbs\hakool_profile_128.png" />
+    <Content Include="test\thumbs\hakool_profile_512.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -81,7 +98,8 @@
     <TypeScriptCompile Include="core\src\game\hkGameConfig.ts" />
     <TypeScriptCompile Include="core\src\hakool.ts" />
     <TypeScriptCompile Include="core\src\index.ts" />
-    <TypeScriptCompile Include="core\src\logger\hkLogger.ts" />
+    <TypeScriptCompile Include="core\src\systems\logger\hkILogger.ts" />
+    <TypeScriptCompile Include="core\src\systems\logger\hkLogger.ts" />
     <TypeScriptCompile Include="core\src\systems\graphics\context\hkIContext.ts" />
     <TypeScriptCompile Include="core\src\systems\graphics\context\hkWebGLContext.ts" />
     <TypeScriptCompile Include="core\src\systems\graphics\hkContextConfig.ts" />

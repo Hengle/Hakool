@@ -8,13 +8,14 @@
  * @since September-08-2020
  */
 
+import { HkGame } from "../../game/hkGame";
 import { HK_GRAPHICS_VERSION, HK_OPRESULT } from "../../utilities/hkEnums";
 import { HkISystem } from "../hkISystem";
 import { HkIContext } from "./context/hkIContext";
 import { HkGraphicsConfig } from "./hkGraphicsConfig";
 
 export interface HkIGraphics
-extends HkISystem
+  extends HkISystem
 {
   /**
    * Initialize the Graphic System. 
@@ -28,7 +29,7 @@ extends HkISystem
    * 
    * @returns Operation result. 
    */
-  init(_config : HkGraphicsConfig)
+  init(_config: HkGraphicsConfig, _game: HkGame)
   : HK_OPRESULT;
 
   /**
