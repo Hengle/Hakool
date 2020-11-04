@@ -64,8 +64,39 @@
     <Content Include="core\configs\library\tsconfig.json" />
     <Content Include="core\configs\testApp\tsconfig.json" />
     <Content Include="core\tsconfig.json" />
+    <TypeScriptCompile Include="core\src\components\hkCmpCamera.ts" />
+    <TypeScriptCompile Include="core\src\components\hkGameObject.ts" />
+    <TypeScriptCompile Include="core\src\components\hkIComponent.ts" />
+    <TypeScriptCompile Include="core\src\objects\hkCamera.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkIUniformLocation.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLUniformLocation.ts" />
+    <TypeScriptCompile Include="core\src\systems\scene\cameraManager\hkCameraManager.ts" />
+    <TypeScriptCompile Include="core\src\systems\scene\gameObjectsManager\hkGameObjectsManager.ts" />
+    <TypeScriptCompile Include="core\src\systems\scene\hkSceneSystem.ts" />
+    <TypeScriptCompile Include="core\src\utilities\hkInterpolation.ts" />
+    <TypeScriptCompile Include="core\src\utilities\hkNode.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkIBuffer.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkIProgram.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkMesh.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkMeshFactory.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkModel.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkModelFactory.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkIShader.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkShaderFactory.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkProgramFactory.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLBuffer.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLIndexBuffer.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLEnums.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLProgram.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLShader.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLVertexBuffer.ts" />
+    <TypeScriptCompile Include="core\src\systems\scene\hkNullScene.ts" />
+    <TypeScriptCompile Include="core\src\systems\scene\hkScene.ts" />
+    <TypeScriptCompile Include="core\src\systems\scene\hkSceneManager.ts" />
     <TypeScriptCompile Include="core\src\utilities\hkColor.ts" />
-    <TypeScriptCompile Include="core\src\utilities\hkVector4.ts" />
+    <TypeScriptCompile Include="core\src\utilities\math\hkMatrix4.ts" />
+    <TypeScriptCompile Include="core\src\utilities\math\HkVector3.ts" />
+    <TypeScriptCompile Include="core\src\utilities\math\hkVector4.ts" />
     <TypeScriptCompile Include="test\apps\testApp\appTest.ts" />
     <Content Include="test\css\style.css" />
     <Content Include="test\tsconfig.json" />
@@ -92,6 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="test\apps\scene\" />
+    <Folder Include="test\assets\shaders\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="core\src\game\hkGame.ts" />
@@ -100,8 +133,8 @@
     <TypeScriptCompile Include="core\src\index.ts" />
     <TypeScriptCompile Include="core\src\systems\logger\hkILogger.ts" />
     <TypeScriptCompile Include="core\src\systems\logger\hkLogger.ts" />
-    <TypeScriptCompile Include="core\src\systems\graphics\context\hkIContext.ts" />
-    <TypeScriptCompile Include="core\src\systems\graphics\context\hkWebGLContext.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\hkIContext.ts" />
+    <TypeScriptCompile Include="core\src\systems\graphics\WebGL\hkWebGLContext.ts" />
     <TypeScriptCompile Include="core\src\systems\graphics\hkContextConfig.ts" />
     <TypeScriptCompile Include="core\src\systems\graphics\hkGraphicsConfig.ts" />
     <TypeScriptCompile Include="core\src\systems\graphics\hkGraphicsWebGL.ts" />

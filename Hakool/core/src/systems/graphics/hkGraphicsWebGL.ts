@@ -10,11 +10,14 @@
 
 import { HkGame } from "../../game/hkGame";
 import { StringifyPowerPreference } from "../../utilities/hkCommons";
-import { HK_GRAPHICS_VERSION, HK_OPRESULT, HK_SYSTEM_ID } from "../../utilities/hkEnums";
-import { HkIContext } from "./context/hkIContext";
-import { HkWebGLContext } from "./context/hkWebGLContext";
-import { HkGraphicsConfig } from "./hkGraphicsConfig";
+import { HK_GRAPHICS_CAPABILITY, HK_GRAPHICS_VERSION, HK_OPRESULT, HK_SYSTEM_ID } from "../../utilities/hkEnums";
+import { HkIContext } from "./hkIContext";
 import { HkIGraphics } from "./HkIGraphics";
+import { HkWebGLProgram } from "./WebGL/hkWebGLProgram";
+import { HkProgramFactory } from "./hkProgramFactory";
+import { HkWebGLContext } from "./WebGL/hkWebGLContext";
+import { HkGraphicsConfig } from "./hkGraphicsConfig";
+import { HkIProgram } from "./hkIProgram";
 
 export class HkGraphicsWebGL
 implements HkIGraphics
@@ -25,8 +28,11 @@ implements HkIGraphics
   static Create()
   : HkGraphicsWebGL
   {
+
     const graphics: HkGraphicsWebGL = new HkGraphicsWebGL();
+
     return graphics;
+
   }
 
   /**
@@ -43,17 +49,19 @@ implements HkIGraphics
    * 
    * @returns Operation result. 
    */
-  init(_config: HkGraphicsConfig, _game: HkGame)
+  init(_game: HkGame, _config: any)
   : HK_OPRESULT
   {
 
-    this._m_APIVersion = _config.apiVersion;
+    const config: HkGraphicsConfig = _config as HkGraphicsConfig;
+
+    this._m_APIVersion = config.apiVersion;
 
     ///////////////////////////////////
     // Canvas Element
 
     const element: HTMLElement
-      = document.getElementById(_config.canvasId);
+      = document.getElementById(config.canvasId);
 
     if (element === null)
     {
@@ -62,7 +70,7 @@ implements HkIGraphics
       _game.logger.logError
       (
         'No HTML Element found with an ID of : '
-        + _config.canvasId
+        + config.canvasId
       );
 
       // Return result.
@@ -76,7 +84,7 @@ implements HkIGraphics
       _game.logger.logError
       (
         "The HTML Element with an ID of : "
-        + _config.canvasId
+        + config.canvasId
         + " is not a canvas element"
       );
 
@@ -95,20 +103,20 @@ implements HkIGraphics
     // Get the power preference string.
     
     let strPowerPreference: string
-      = StringifyPowerPreference(_config.contextConfiguration.powerPreference);
+      = StringifyPowerPreference(config.contextConfiguration.powerPreference);
 
     // Create the context attributes object.
 
     let contextConfig : object = 
     {
       
-      alpha : _config.contextConfiguration.alpha,
+      alpha: config.contextConfiguration.alpha,
 
-      depth : _config.contextConfiguration.depth,
+      depth: config.contextConfiguration.depth,
 
-      stencil : _config.contextConfiguration.stencil,
+      stencil: config.contextConfiguration.stencil,
 
-      antialias : _config.contextConfiguration.antialias,
+      antialias: config.contextConfiguration.antialias,
 
       powerPreference : strPowerPreference
 
@@ -117,7 +125,7 @@ implements HkIGraphics
     ///////////////////////////////////
     // Graphics Context
 
-    const apiVersion = _config.apiVersion;
+    const apiVersion = config.apiVersion;
 
     let context: WebGLRenderingContext;
 
@@ -127,6 +135,7 @@ implements HkIGraphics
       || apiVersion === HK_GRAPHICS_VERSION.KWebGL_or_WebGLExperimental
     )
     {
+
       // Try to get the WebGL context.
 
       context = canvas.getContext
@@ -139,11 +148,13 @@ implements HkIGraphics
 
       if(context === null)
       {
+
         context = canvas.getContext
         (
           'experimental-webgl',
           contextConfig
         ) as WebGLRenderingContext;
+
       }
     }
     else if (apiVersion === HK_GRAPHICS_VERSION.kWebGLExperimental)
@@ -158,6 +169,7 @@ implements HkIGraphics
     }
     else
     {
+
       // This Graphics module doesn't support the Graphics Version
 
       _game.logger.logError
@@ -166,43 +178,71 @@ implements HkIGraphics
       );
       
       return HK_OPRESULT.kIncompatible_format;
+
     }
 
     // Check if it have the context.
 
     if(context === null)
     {
+
       _game.logger.logError
       (
         "Browser doesn't support WebGL."
       );
 
       return HK_OPRESULT.kFail;
+
     }
 
     // Create context object.
 
     const iContext: HkWebGLContext = new HkWebGLContext();
 
-    iContext.init(context, _config.apiVersion);
-
-    // Clear color.
-
-    iContext.setClearColor(_config.contextConfiguration.clearColor);
-
-    iContext.clear();
+    iContext.init(context, config.apiVersion);
 
     this._m_context = iContext;
 
-    // Add system to game.
+    // Clear color.
 
-    _game.addSystem(HK_SYSTEM_ID.kGraphics, this);
+    iContext.setClearColor(config.contextConfiguration.clearColor);    
+
+    // Program
+
+    const program = HkProgramFactory.CreateDefault(iContext);
+
+    this._m_program = program;
+
+    iContext.useProgram(program);
+
+    iContext.enable(HK_GRAPHICS_CAPABILITY.kDepthTest);
 
     _game.graphics = this;
 
     // Return result
 
     return HK_OPRESULT.kSuccess;
+
+  }
+
+  update()
+  : void
+  {
+
+    return;
+
+  }
+
+  draw()
+  : void
+  {
+
+    const context = this._m_context;
+
+    context.clear();
+
+    return;
+
   }
 
   getID()
@@ -228,7 +268,18 @@ implements HkIGraphics
   getContext()
   : HkIContext
   {
+
     return this._m_context;
+
+  }
+
+
+  getProgram()
+  : HkIProgram
+  {
+
+    return this._m_program;
+
   }
 
   /**
@@ -247,10 +298,10 @@ implements HkIGraphics
   /**
    * Private constructor.
    */
-  constructor()
+  private constructor()
   {
     return;
-  }
+  }      
   
   /**
    * The HTML canvas element where the application is being drawn.
@@ -261,6 +312,11 @@ implements HkIGraphics
    * The Canvas's WebGL rendering context.
    */
   private _m_context: HkWebGLContext;
+
+  /**
+   * 
+   */
+  private _m_program: HkIProgram;
 
   /**
    * The graphics API version of this system.

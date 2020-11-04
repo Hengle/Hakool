@@ -1,0 +1,80 @@
+{
+  "bundle": {
+    "commonSourceDirectory": "../core/src",
+    "sourceFiles": [
+      "../core/src/hakool.ts",
+      "../core/src/utilities/hkEnums.ts",
+      "../core/src/utilities/hkCommons.ts",
+      "../core/src/utilities/math/hkVector4.ts",
+      "../core/src/utilities/hkColor.ts",
+      "../core/src/systems/graphics/hkIBuffer.ts",
+      "../core/src/systems/graphics/hkIProgram.ts",
+      "../core/src/systems/graphics/hkIShader.ts",
+      "../core/src/systems/graphics/hkIContext.ts",
+      "../core/src/systems/hkISystem.ts",
+      "../core/src/systems/graphics/HkIGraphics.ts",
+      "../core/src/systems/graphics/HkGraphicsWebGL.ts",
+      "../core/src/systems/logger/hkILogger.ts",
+      "../core/src/systems/graphics/HkContextConfig.ts",
+      "../core/src/systems/graphics/hkGraphicsConfig.ts",
+      "../core/src/game/hkGameConfig.ts",
+      "../core/src/systems/logger/hkLogger.ts",
+      "../core/src/systems/scene/hkScene.ts",
+      "../core/src/systems/scene/hkNullScene.ts",
+      "../core/src/systems/scene/hkSceneManager.ts",
+      "../core/src/game/hkGame.ts",
+      "../core/src/index.ts",
+      "../core/src/components/hkIComponent.ts",
+      "../core/src/components/hkCmpCamera.ts",
+      "../core/src/utilities/math/HkVector3.ts",
+      "../core/src/utilities/math/hkMatrix4.ts",
+      "../core/src/utilities/hkNode.ts",
+      "../core/src/components/hkGameObject.ts",
+      "../core/src/objects/hkCamera.ts",
+      "../core/src/systems/graphics/hkGraphicsWebGL2.ts",
+      "../core/src/systems/graphics/hkMesh.ts",
+      "../core/src/systems/graphics/hkMeshFactory.ts",
+      "../core/src/systems/graphics/hkModel.ts",
+      "../core/src/systems/graphics/hkModelFactory.ts",
+      "../core/src/systems/graphics/hkShaderFactory.ts",
+      "../core/src/systems/graphics/hkProgramFactory.ts",
+      "../core/src/systems/graphics/WebGL/hkWebGLBuffer.ts",
+      "../core/src/systems/graphics/WebGL/hkWebGLIndexBuffer.ts",
+      "../core/src/systems/graphics/WebGL/hkWebGLEnums.ts",
+      "../core/src/systems/graphics/WebGL/hkWebGLVertexBuffer.ts",
+      "../core/src/systems/graphics/WebGL/hkWebGLShader.ts",
+      "../core/src/systems/graphics/WebGL/hkWebGLProgram.ts",
+      "../core/src/systems/graphics/WebGL/hkWebGLContext.ts"
+    ],
+    "js": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 620,
+          "kind": "emitHelpers",
+          "data": "typescript:extends"
+        },
+        {
+          "pos": 622,
+          "end": 80992,
+          "kind": "text"
+        }
+      ],
+      "sources": {
+        "helpers": [
+          "typescript:extends"
+        ]
+      }
+    },
+    "dts": {
+      "sections": [
+        {
+          "pos": 0,
+          "end": 39847,
+          "kind": "text"
+        }
+      ]
+    }
+  },
+  "version": "4.0.3"
+}

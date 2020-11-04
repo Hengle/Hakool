@@ -39,8 +39,40 @@ export class HkVector4
     return;
   }
 
+  static LinearInterpolation
+  (
+    _a: HkVector4,
+    _b: HkVector4,
+    _t: number,
+    _out: HkVector4
+  )
+  : void
+  {
+
+    _out.x = _a.x + (_b.x - _a.x) * _t;
+    _out.y = _a.y + (_b.y - _a.y) * _t;
+    _out.z = _a.z + (_b.z - _a.z) * _t;
+    _out.w = _a.w + (_b.w - _a.w) * _t;
+
+    return;
+
+  }
+
+  copy(_vector: HkVector4)
+  : HkVector4
+  {
+
+    this.x = _vector.x;
+    this.y = _vector.y;
+    this.z = _vector.z;
+    this.w = _vector.w;
+
+    return this;
+
+  }
+
   set(_x?: number, _y?: number, _z?: number, _w?: number)
-    : void
+  : HkVector4
   {
     if (_x !== undefined) {
       this.x = _x;
@@ -58,17 +90,20 @@ export class HkVector4
       this.w = _w;
     }
 
-    return;
+    return this;
   }
 
   scale(_scalar: number)
-    : void
+  : HkVector4
   {
+
     this.x *= _scalar;
     this.y *= _scalar;
     this.z *= _scalar;
     this.w *= _scalar;
-    return;
+
+    return this;
+
   }
 
   x: number;

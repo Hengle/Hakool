@@ -8,30 +8,14 @@
  * @since September-08-2020
  */
 
-import { HkGame } from "../../game/hkGame";
-import { HK_GRAPHICS_VERSION, HK_OPRESULT } from "../../utilities/hkEnums";
+import { HK_GRAPHICS_VERSION } from "../../utilities/hkEnums";
 import { HkISystem } from "../hkISystem";
-import { HkIContext } from "./context/hkIContext";
-import { HkGraphicsConfig } from "./hkGraphicsConfig";
+import { HkIContext } from "./hkIContext";
+import { HkIProgram } from "./hkIProgram";
 
 export interface HkIGraphics
   extends HkISystem
 {
-  /**
-   * Initialize the Graphic System. 
-   * 
-   * Possible results :
-   * 
-   * * kObject_not_found : The canvas was not found in the active HTML document.
-   * * kSuccess : Operation was a success.
-   * 
-   * @param _config System configuration.
-   * 
-   * @returns Operation result. 
-   */
-  init(_config: HkGraphicsConfig, _game: HkGame)
-  : HK_OPRESULT;
-
   /**
    * Get the HTML canvas element where the application is being drawn.
    */
@@ -42,7 +26,10 @@ export interface HkIGraphics
    * Get the canvas's graphics context.
    */
   getContext()
-  : HkIContext;
+    : HkIContext;
+
+  getProgram()
+    : HkIProgram;
 
   /**
    * Get the Graphics API version of this system.

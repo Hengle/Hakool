@@ -31,9 +31,9 @@ export class HkContextConfig
    */
   constructor
   (
-    _bAlpha ?: boolean,
-    _bDepth ?: boolean,
-    _bStencil ?: boolean,
+    _bAlpha?: boolean,
+    _bDepth?: boolean,
+    _bStencil?: boolean,
     _bAntialias?: boolean,
     _clearColor?: HkColor,
     _powerPreference?: HK_POWER_PREFERENCE

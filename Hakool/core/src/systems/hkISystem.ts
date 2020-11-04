@@ -8,16 +8,38 @@
  * @since September-08-2020
  */
 
-import { HK_SYSTEM_ID } from "../utilities/hkEnums";
+import { HkGame } from "../game/hkGame";
+import { HK_OPRESULT, HK_SYSTEM_ID } from "../utilities/hkEnums";
 
 export interface HkISystem
 {
-  
+
+  /**
+   * Initialize the System.
+   * 
+   * @param _game
+   * @param _config
+   */
+  init(_game: HkGame, _config: any)
+    : HK_OPRESULT;
+
+  /**
+   * 
+   * */
+  update()
+  : void;
+
+  /**
+   * 
+   * */
+  draw()
+  : void;
+
   /**
    * Get the system identifier.
    * 
    * @returns System id.
    */
   getID()
-  : HK_SYSTEM_ID;
+    : HK_SYSTEM_ID;  
 } 
